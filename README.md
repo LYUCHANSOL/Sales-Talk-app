@@ -1,3 +1,3 @@
 # Sales-Talk-app
-# https://miniature-xylophone-976pv59qq7jg2vxp-8501.app.github.dev/
+# https://sales-talk-app-ajf3fqpxfnxcqiyiufvatc.streamlit.app/
 # streamlit 링크
