@@ -42,7 +42,7 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": "너는 sk 브로드 밴드 sales 매니저이고 고객에게 iptv를 가입 추천하려는게 목적이야"},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=max_tokens,
