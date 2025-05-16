@@ -11,7 +11,7 @@ api_key = st.text_input("OpenAI API 키를 입력하세요", type="password")
 
 # 고객 특성 매핑
 mean1_to_template = {
-   "기가인터넷 사용": "고속 인터넷을 사용 중이니 IPTV 이용에 적합합니다.",
+    "기가인터넷 사용": "고속 인터넷을 사용 중이니 IPTV 이용에 적합합니다.",
     "데이터 사용량 많음": "인터넷 사용량이 많은 편이라 IPTV 이용에 적합합니다.",
     "와이파이 사용": "SK 와이파이를 사용 중이시라면 IPTV도 함께 이용하시기 좋아요.",
     "윙즈 사용": "윙즈를 이미 이용 중이라 IPTV 연결도 원활하게 이용 가능합니다.",
@@ -44,7 +44,7 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "너는 sk 브로드 밴드 sales 매니저이고 고객에게 iptv를 가입 추천하려는게 목적이야"},
+                {"role": "system", "content": "너는 SK브로드밴드의 세일즈 매니저이고 고객에게 IPTV를 추천하는 것이 목적이야."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=max_tokens,
@@ -54,7 +54,7 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
     except Exception as e:
         return f"에러 발생: {str(e)}"
 
-# 입력창
+# 사용자 입력 처리
 user_input = st.text_input("고객 특성을 입력하세요 (쉼표로 구분)")
 
 if st.button("추천 토크 생성하기"):
@@ -66,10 +66,11 @@ if st.button("추천 토크 생성하기"):
         mean1_list = [x.strip() for x in user_input.split(",")]
         mean2_list = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list]
         prompt = build_interactive_prompt(mean1_list, mean2_list)
-        response = chat_with_gpt4omini(prompt, api_key)
+
+        with st.spinner("AI 추천 토크 생성 중..."):
+            response = chat_with_gpt4omini(prompt, api_key)
 
         st.subheader("[Sales Talk]")
         st.success(response)
         st.write("-" * 60)
-
-st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
+        st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
