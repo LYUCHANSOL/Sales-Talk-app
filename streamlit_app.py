@@ -21,8 +21,12 @@ mean1_to_template = {
 
 # 프롬프트 생성 함수
 def build_interactive_prompt(mean1_list, mean2_list):
-    mean1_str = "\n- " + "\n- ".join(mean1_list)
-    mean2_str = "\n- " + "\n- ".join(mean2_list)
+    # 알파벳(혹은 원하는 기준) 순으로 정렬
+    mean1_list_sorted = sorted(mean1_list)
+    mean2_list_sorted = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list_sorted]
+
+    mean1_str = "\n- " + "\n- ".join(mean1_list_sorted)
+    mean2_str = "\n- " + "\n- ".join(mean2_list_sorted)
 
     return f"""
 고객 특성:{mean1_str}
