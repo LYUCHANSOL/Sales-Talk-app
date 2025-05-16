@@ -7,7 +7,7 @@ st.title("고객 특성 기반 IPTV 추천 토크 생성기")
 st.write("Made with [gptonline.ai/ko](https://gptonline.ai/ko/)")
 
 # API 키 입력
-api_key = st.text_input("OpenAI API 키를 입력하세요", type="password")
+api_key = st.secrets["OPENAI_API_KEY"]
 
 # 고객 특성 매핑
 mean1_to_template = {
