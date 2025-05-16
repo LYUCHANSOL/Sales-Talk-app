@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import openai
+from openai import OpenAI
 
 # Streamlit 앱 제목
 st.title("고객 특성 기반 IPTV 추천 토크 생성기")
@@ -21,11 +21,8 @@ mean1_to_template = {
 
 # 프롬프트 생성 함수
 def build_interactive_prompt(mean1_list, mean2_list):
-    mean1_list_sorted = sorted(mean1_list)
-    mean2_list_sorted = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list_sorted]
-
-    mean1_str = "\n- " + "\n- ".join(mean1_list_sorted)
-    mean2_str = "\n- " + "\n- ".join(mean2_list_sorted)
+    mean1_str = "\n- " + "\n- ".join(mean1_list)
+    mean2_str = "\n- " + "\n- ".join(mean2_list)
 
     return f"""
 고객 특성:{mean1_str}
@@ -40,11 +37,11 @@ def build_interactive_prompt(mean1_list, mean2_list):
 - 입력한 고객 특성을 모두 사용해 줘
 """
 
-# GPT-4o-mini와 대화하는 함수 (openai 최신버전용)
+# GPT-4o-mini와 대화하는 함수
 def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
     try:
-        openai.api_key = api_key
-        response = openai.chat.completions.create(
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "너는 sk 브로드 밴드 sales 매니저이고 고객에게 iptv를 가입 추천하려는게 목적이야"},
