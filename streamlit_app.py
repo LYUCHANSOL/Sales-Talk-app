@@ -58,29 +58,22 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
     except Exception as e:
         return f"에러 발생: {str(e)}"
 
-# 사용자 입력 반복 받기
-def run_interactive_mode():
-    print("\n고객 특성을 입력하세요 (쉼표로 구분, 예: 데이터 사용량 많음, 기가인터넷 사용)")
-    print("'끝'을 입력하면 종료됩니다.\n")
+# 입력창
+user_input = st.text_input("고객 특성을 입력하세요 (쉼표로 구분)")
 
-    while True:
-        user_input = input("고객 특성 입력: ").strip()
-
-        if user_input.lower() == "끝":
-            print("프로그램을 종료합니다.")
-            break
-
+if st.button("추천 토크 생성하기"):
+    if not api_key:
+        st.error("API 키를 입력해주세요.")
+    elif not user_input:
+        st.error("고객 특성을 입력해주세요.")
+    else:
         mean1_list = [x.strip() for x in user_input.split(",")]
         mean2_list = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list]
         prompt = build_interactive_prompt(mean1_list, mean2_list)
-        response = chat_with_gpt4omini(prompt)
+        response = chat_with_gpt4omini(prompt, api_key)
 
-        print("\n[Sales Talk]")
-        print(response)
-        print("-" * 60)
-        
-# 메인 실행
-if __name__ == "__main__":
-    run_interactive_mode()
-    
+        st.subheader("[Sales Talk]")
+        st.success(response)
+        st.write("-" * 50)
+
 st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
