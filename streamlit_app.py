@@ -11,7 +11,7 @@ api_key = st.text_input("OpenAI API 키를 입력하세요", type="password")
 
 # 고객 특성 매핑
 mean1_to_template = {
-    "기가인터넷 사용": "고속 인터넷을 사용 중이니 IPTV 이용에 적합합니다.",
+   "기가인터넷 사용": "고속 인터넷을 사용 중이니 IPTV 이용에 적합합니다.",
     "데이터 사용량 많음": "인터넷 사용량이 많은 편이라 IPTV 이용에 적합합니다.",
     "와이파이 사용": "SK 와이파이를 사용 중이시라면 IPTV도 함께 이용하시기 좋아요.",
     "윙즈 사용": "윙즈를 이미 이용 중이라 IPTV 연결도 원활하게 이용 가능합니다.",
@@ -70,6 +70,6 @@ if st.button("추천 토크 생성하기"):
 
         st.subheader("[Sales Talk]")
         st.success(response)
-        st.write("-" * 50)
+        st.write("-" * 60)
 
 st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
