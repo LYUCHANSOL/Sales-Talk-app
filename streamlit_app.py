@@ -37,15 +37,10 @@ def build_interactive_prompt(mean1_list, mean2_list):
 - 입력한 고객 특성을 모두 사용해 줘
 """
 
-# GPT-4o-mini와 대화하는 함수
+# GPT 호출 함수
 def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
     try:
-        import os
-        from openai import OpenAI
-        os.environ["OPENAI_API_KEY"] = api_key
-        client = OpenAI()
-
-        print("프롬프트 요청 시작")  # 콘솔 확인용
+        client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -55,12 +50,9 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
             max_tokens=max_tokens,
             temperature=0.01
         )
-        print("프롬프트 응답 수신")  # 콘솔 확인용
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"에러 발생: {e}")  # 콘솔에 오류 출력
         return f"에러 발생: {str(e)}"
-
 
 # 사용자 입력 처리
 user_input = st.text_input("고객 특성을 입력하세요 (쉼표로 구분)")
