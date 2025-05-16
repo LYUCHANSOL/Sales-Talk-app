@@ -78,5 +78,9 @@ def run_interactive_mode():
         print("\n[Sales Talk]")
         print(response)
         print("-" * 60)
-
+        
+# 메인 실행
+if __name__ == "__main__":
+    run_interactive_mode()
+    
 st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
