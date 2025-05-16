@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import re
 from openai import OpenAI
 
 # Streamlit 앱 제목
@@ -59,22 +60,23 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
         return f"에러 발생: {str(e)}"
 
 # 사용자 입력 처리
-user_input = st.text_input("고객 특성을 입력하세요 (쉼표로 구분)")
+import re
 
+user_input = st.text_input("고객 특성을 입력하세요 (쉼표 또는 띄어쓰기로 구분)")
 if st.button("추천 토크 생성하기"):
     if not api_key:
         st.error("API 키를 입력해주세요.")
     elif not user_input:
         st.error("고객 특성을 입력해주세요.")
     else:
-        mean1_list = [x.strip() for x in user_input.split(",")]
+        # 쉼표, 공백, 탭 등으로 분리
+        mean1_list = [x.strip() for x in re.split(r'[, \t]+', user_input) if x.strip()]
         mean2_list = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list]
         prompt = build_interactive_prompt(mean1_list, mean2_list)
-
-        with st.spinner("AI 추천 토크 생성 중..."):
-            response = chat_with_gpt4omini(prompt, api_key)
+        response = chat_with_gpt4omini(prompt, api_key)
 
         st.subheader("[Sales Talk]")
         st.success(response)
         st.write("-" * 60)
+
         st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
