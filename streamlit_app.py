@@ -60,8 +60,6 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
         return f"에러 발생: {str(e)}"
 
 # 사용자 입력 처리
-import re
-
 user_input = st.text_input("고객 특성을 입력하세요 (쉼표 또는 띄어쓰기로 구분)")
 if st.button("추천 토크 생성하기"):
     if not api_key:
