@@ -14,8 +14,7 @@ mean1_to_template = {
     "기가인터넷 사용": "고속 인터넷을 사용 중이니 IPTV 이용에 적합합니다.",
     "데이터 사용량 많음": "인터넷 사용량이 많은 편이라 IPTV 이용에 적합합니다.",
     "와이파이 사용": "SK 와이파이를 사용 중이시라면 IPTV도 함께 이용하시기 좋아요.",
-    "윙즈(와이파이 확장기) 사용": "부가서비스를 이미 이용 중이라 IPTV 연결도 원활하게 이용 가능합니다.",
-    "윙즈 사용": "부가서비스를 이미 이용 중이라 IPTV 연결도 원활하게 이용 가능합니다.",
+    "윙즈 사용": "윙즈를 이미 이용 중이라 IPTV 연결도 원활하게 이용 가능합니다.",
     "장기고객": "장기간 이용 고객님께는 IPTV 추가 시 혜택도 더해드립니다.",
     "재약정함": "재약정을 하셨다면 IPTV 추가 시 추가 혜택을 적용받을 수 있습니다."
 }
@@ -31,8 +30,6 @@ def build_interactive_prompt(mean1_list, mean2_list):
 추천 근거:{mean2_str}
 
 - 친절하지만 전문가답고, 과하게 영업티는 나지 않게 해줘.
-- 반드시 추천 근거만 활용하고, 가족, 여가, 취향 등 추가적인 부가
- 설명은 넣지 마.
 - 반드시 추천 근거만 활용하고, 가족, 여가, 취향 등 추가적인 부가 설명은 넣지 마.
 - 입력된 특성을 반복해서 언급하지 말고, 중복된 내용은 한 번만 언급해.
 - 문장은 간결하게, 2문장 이내로 작성해.
@@ -57,22 +54,25 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
     except Exception as e:
         return f"에러 발생: {str(e)}"
 
-# 입력창
-user_input = st.text_input("고객 특성을 입력하세요 (쉼표로 구분)")
+# 사용자 입력 반복 받기
+def run_interactive_mode():
+    print("\n고객 특성을 입력하세요 (쉼표로 구분, 예: 데이터 사용량 많음, 기가인터넷 사용)")
+    print("'끝'을 입력하면 종료됩니다.\n")
 
-if st.button("추천 토크 생성하기"):
-    if not api_key:
-        st.error("API 키를 입력해주세요.")
-    elif not user_input:
-        st.error("고객 특성을 입력해주세요.")
-    else:
+    while True:
+        user_input = input("고객 특성 입력: ").strip()
+
+        if user_input.lower() == "끝":
+            print("프로그램을 종료합니다.")
+            break
+
         mean1_list = [x.strip() for x in user_input.split(",")]
         mean2_list = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list]
         prompt = build_interactive_prompt(mean1_list, mean2_list)
-        response = chat_with_gpt4omini(prompt, api_key)
+        response = chat_with_gpt4omini(prompt)
 
-        st.subheader("[Sales Talk]")
-        st.success(response)
-        st.write("-" * 50)
+        print("\n[Sales Talk]")
+        print(response)
+        print("-" * 60)
 
 st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
