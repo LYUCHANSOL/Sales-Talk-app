@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import re
 from openai import OpenAI
 
 # Streamlit 앱 제목
@@ -17,7 +16,7 @@ mean1_to_template = {
     "와이파이 사용": "SK 와이파이를 사용 중이시라면 IPTV도 함께 이용하시기 좋아요.",
     "윙즈 사용": "윙즈를 이미 이용 중이라 IPTV 연결도 원활하게 이용 가능합니다.",
     "장기고객": "장기간 이용 고객님께는 IPTV 추가 시 혜택도 더해드립니다.",
-    "재약정함": "재약정을 하셨다면 IPTV 추가 시 추가 혜택을 적용받을 수 있습니다."
+    "재약정 함": "재약정을 하셨다면 IPTV 추가 시 추가 혜택을 적용받을 수 있습니다."
 }
 
 # 프롬프트 생성 함수
@@ -60,21 +59,23 @@ def chat_with_gpt4omini(prompt, api_key, max_tokens=150):
         return f"에러 발생: {str(e)}"
 
 # 사용자 입력 처리
-user_input = st.text_input("고객 특성을 입력하세요 (쉼표 또는 띄어쓰기로 구분)")
+user_input = st.text_input("고객 특성을 입력하세요 (쉼표로 구분)")
+
 if st.button("추천 토크 생성하기"):
     if not api_key:
         st.error("API 키를 입력해주세요.")
     elif not user_input:
         st.error("고객 특성을 입력해주세요.")
     else:
-        # 쉼표, 공백, 탭 등으로 분리
-        mean1_list = [x.strip() for x in re.split(r'[, \t]+', user_input) if x.strip()]
+        mean1_list = [x.strip() for x in user_input.split(",")]
         mean2_list = [mean1_to_template.get(k, "적합한 추천 이유") for k in mean1_list]
         prompt = build_interactive_prompt(mean1_list, mean2_list)
-        response = chat_with_gpt4omini(prompt, api_key)
+
+        with st.spinner("AI 추천 토크 생성 중..."):
+            response = chat_with_gpt4omini(prompt, api_key)
 
         st.subheader("[Sales Talk]")
         st.success(response)
         st.write("-" * 60)
-
         st.write("\nPowered by [gptonline.ai/ko](https://gptonline.ai/ko/)")
+
